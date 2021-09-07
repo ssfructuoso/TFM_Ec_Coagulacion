@@ -6,7 +6,7 @@
 
 /* 
  * File:   main.cpp
- * Author: salvador
+ * Author: Salvador Fructuoso
  *
  */
 
@@ -30,7 +30,7 @@ using namespace std;
 int main(int argc, char** argv) {
 
     /*
-    cout<< "Seccional:---" << endl;
+    cout<< "Seccional: (Trapecios y RK3)" << endl;
     Seccional secRK3 = Seccional("./simulaciones/seccional/seccional_nx100_trapeciosCompuesto_1");
     
     //insertarGrid(double v0, double R, int m, int numParticionesIntegrales, bool dominioEquiespaciado, bool pasoAdaptativo)
@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
 //////////////////////////////////////////
     
     
-    cout<< "Volumenes finitos:---" << endl;
+    cout<< "Volumenes finitos: (Trapecios y RK3) " << endl;
     VolFinitos vol1=VolFinitos("./simulaciones/vol_finitos/volFinitos_nx100_trapeciosCompuesto_1");
     
     //insertarGrid(double xInicio, double R, double Nx, int numParticionesIntegrales, bool dominioEquiespaciado, bool pasoAdaptativo)

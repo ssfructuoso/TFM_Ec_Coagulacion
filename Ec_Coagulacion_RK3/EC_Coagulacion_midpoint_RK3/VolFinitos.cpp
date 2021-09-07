@@ -1,12 +1,21 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Clase para la simulacion de soluciones de la ecuacion de Smoluchowski
+ * utilizando un metodo de volumenes finitos.
+ * En este codigo primeramente se definen distintas funciones (calculo de coeficientes seccionales,
+ * definicion del nucleo, etc) para luego poder plasmar y calcular el esquema numerico en la 
+ * funcion "calcular()".
+ * 
+ * Los resultados obtenidos se guardan en un fichero de texto con un formato que se puede consultar en la 
+ * funcion "calcular()".
+ * 
+ * En las formulas de cuadratura se aplica la formula de cuadratura del punto medio y un metodo de Runge-Kutta 
+ * de orden 3 para la aproximacion temporal.
+ * 
  */
 
 /* 
- * File:   volFinitos.cpp
- * Author: salvador
+ * File:   VolFinitos.cpp
+ * Author: Salvador Fructuoso
  *
  */
 
@@ -29,6 +38,9 @@ using namespace std;
 
 const long double PI = std::atan(1.0)*4;
 
+/*
+ * Distribucion inicial de puntos: en este caso es la solucion en t_0 para el nucleo producto.
+ */
 /*
 long double VolFinitos::fIni(long double x, long double t) {
     auto bessel = [&] (long double s) {
@@ -77,17 +89,15 @@ long double VolFinitos::fIni(long double x, long double t) {
  * */
 
 
+
 long double VolFinitos::fIni(long double x, long double t) {
     long double n;
     //Para kernel unidad
-
     //double M00=1;
     //n = pow(((2 * M00) / (2 + M00 * t)), 2) * exp(-2 * M00 * x / (2 + M00 * t));
 
     //Para kernel suma
     n = pow(2 * PI, -1.0 / 2) * exp(-t) * pow(x, -3.0 / 2) * exp(-x * 0.5 * exp(-2 * t));
-    //long double n = d*pow(2 * PI, -1.0/2) * exp(-t) * pow(d, -3.0/2) * exp(-d * 0.5 * exp(-2 * t));//*dfd;
-
     //Kerner Browniano
     /*
         if (x < 1e-2) {
@@ -140,6 +150,9 @@ long double VolFinitos::gIni(long double x, long double t) {
     return g;
 }
 
+/*
+ * Promedio de la distribución inicial de puntos (densidad de masa).
+ */
 long double VolFinitos::g_media0(int i, long double t) {
     long double dom_Lambda[2];
     dom_Lambda [0] = x12[i];
@@ -193,6 +206,10 @@ long double VolFinitos::ker(long double x, long double y) {
     return x+y;
 }
 
+/*
+ * Primera integral contenida en el flujo J_{i+1/2}
+ * en el metodo de volumenes finitos
+ */
 long double VolFinitos::A(int j, long double x_k) {
     long double dom_Lambda[2];
     //if (j + 1 == Nx + 1) {
@@ -229,6 +246,11 @@ long double VolFinitos::A(int j, long double x_k) {
     return suma;
 }
 
+
+/*
+ * Segunda integral contenida en el flujo J_{i+1/2}
+ * en el metodo de volumenes finitos
+ */
 long double VolFinitos::B(int i, long double x_k, int alfa) {
     long double limInf = x12[i + 1] - x_k;
     long double limSup = x12[alfa];
@@ -264,6 +286,9 @@ long double VolFinitos::B(int i, long double x_k, int alfa) {
     return suma;
 }
 
+/*
+ Valor \alpha_{i,k} para los subindices de los distintas puntos en el dominio
+ */
 int VolFinitos::getAlfa(int i, int k) {
     bool encontrado = false;
     long double v12 = x12[i + 1];
@@ -285,17 +310,21 @@ int VolFinitos::getAlfa(int i, int k) {
     return alfa;
 }
 
+
+/*
+ Constructor de la clase
+ */
 VolFinitos::VolFinitos(const char * nombreTxtResultado) {
     this->nombreTxtResultado = nombreTxtResultado;
 }
 
-void VolFinitos::insertarGrid(long double xInicio, long double R, long double Nx, int numParticionesIntegrales, bool dominioEquiespaciado, long double kdominio) {
+void VolFinitos::insertarGrid(long double xInicio, long double R, long double Nx, int numParticionesIntegrales, bool dominioEquiespaciado, bool pasoAdaptativo) {
     this->xInicio = xInicio;
     this->R = R;
     this->Nx = Nx;
     this->numParticionesIntegrales = numParticionesIntegrales;
     this->dominioEquiespaciado = dominioEquiespaciado;
-    this->kdominio = kdominio;
+    this->pasoAdaptativo=pasoAdaptativo;
 }
 
 void VolFinitos::insertarTiempo(long double t0, long double tFinal, long double incTiempo) {
@@ -305,7 +334,11 @@ void VolFinitos::insertarTiempo(long double t0, long double tFinal, long double 
     this->numIntervalosTiempo = (int) ((tFinal - t0) / incTiempo) + 1;
 }
 
-long double VolFinitos::du(int i, long double add, int kS) {
+
+/*
+ * dg/dt: se invoca en el metodo de Runge-Kutta posteriormente
+ */
+long double VolFinitos::dg(int i, long double add, int kS) {
     long double suma = 0;
     long double sumaK = 0;
     long double sumaJ = 0;
@@ -315,7 +348,7 @@ long double VolFinitos::du(int i, long double add, int kS) {
     long double uAux [Nx + 1];
 
     for (int i = 0; i < Nx + 1; i++) {
-        uAux[i] = u[0][i] + add;
+        uAux[i] = g[0][i] + add;
     }
     suma = 0;
     for (int k = 0; k <= i; k++) {//!!
@@ -340,12 +373,14 @@ long double VolFinitos::du(int i, long double add, int kS) {
     return kReturn;
 }
 
+
 /*
- * 
+ * Mediante esta funcion se invocan a las funciones definidas anteriormente y se 
+ * ejecutan las simulaciones
  */
 void VolFinitos::calcular() {
     time_t start, end;
-    time(&start);
+    time(&start);//Inicio del calculo del tiempo de ejecucion
 
     x12 = new long double [Nx + 2];
     x12[0] = xInicio;
@@ -371,62 +406,22 @@ void VolFinitos::calcular() {
         xi[i] = (x12[i] + x12[i + 1]) / 2.0;
     }
 
-
-    /*
-    g=7.321e10;// m/d² 
-    kBolztmann=1.380649e-23; // J/K
-    T=298; //Kelvin
-    din_viscosity=1.0325e-8; //N*d/m²
-    sh_rate=86400; // N*s/m2
-    p_0=2.25e12;// ug/m³
-    p_w=1.027e12;// ug/m³
-    Z = 30; //m
-    a_0=pow(3*xi[0]/(4*PI*p_0),1./3); //Simetria esferica para las primeras particulas
-    D = 2.6; //Dimension fractal
-    w = new long double [Nx+1];
-    I = new long double [Nx + 1];
-    for (int i = 0; i < Nx + 1; i++) {
-        I[i] = 0;
-        w[i]=(g/(6*PI*(xi[i]/p_0)*(a_0/xi[0])))*(1./p_w-1./p_0)*pow(xi[i],1-1./D);
-    }
-    I[0] = 1000;//ug/m³*d^(-1)
-    //
-     * */
-
-    g = 9.8; // m/d² 
-    kBolztmann = 1.380649e-23; // J/K
-    T = 298; //Kelvin
-    din_viscosity = 0.0008921; //N*d/m²
-    sh_rate = 1; // N*s/m2
-    p_0 = 2.25e12; // ug/m³
-    p_w = 1.027e12; // ug/m³
-    Z = 30; //m
-    a_0 = pow(3 * xi[0] / (4 * PI * p_0), 1. / 3); //Simetria esferica para las primeras particulas
-    D = 2.6; //Dimension fractal
-    w = new long double [Nx + 1];
-    I = new long double [Nx + 1];
-    for (int i = 0; i < Nx + 1; i++) {
-        I[i] = 0;
-        w[i] = (g / (6 * PI * (xi[i] / p_0)*(a_0 / xi[0])))*(1. / p_w - 1. / p_0) * pow(xi[i], 1 - 1. / D);
-    }
-    I[0] = 10e5/86400;//ug/m³*d^(-1 Z=30
-    //I[0] = 10e4 / 86400;
-    //
-
-    /////////////
-    //int numIntervalosT = (int) ((tFinal - t0) / estTiempo) + 1;
+;
     cout << "--------------" << endl;
     cout << "Intervalos de tiempo:";
     cout << numIntervalosTiempo << endl;
 
     /////////////////////////////////////////////////
-
+    ////////////////////////////
+    ///Generacion de un fichero de texto en el cual guardar los resultados 
+    ///de la simulacion
     ofstream fichero;
     char buf[120];
     snprintf(buf, sizeof (buf), "%s.txt", this->nombreTxtResultado);
     fichero.open(buf);
 
     fichero.precision(20);
+    //Escritura de variables en el fichero de texto
     fichero << Nx;
     fichero << ";";
     fichero << xInicio;
@@ -506,17 +501,21 @@ void VolFinitos::calcular() {
 
         }
     };
-    valores();
+    valores(); //Invocacion de valores() para generar los valores de las distintas integrales presentes
+               // en el flujo J_{i+1/2}
+    
+    
     ///////////////////////////////////////////////////////////
-
-    u = new long double *[2];
+    ///////////////////////////////////////////////////////////
+    ///////////Inicio de la implementación del esquema numerico
+    
+    
+    g = new long double *[2];
     for (int i = 0; i < 2; i++) {
-        u[i] = new long double [Nx + 1];
+        g[i] = new long double [Nx + 1];
     }
-    cout << "Valores integrales iniciales:"<<endl;
     for (int i = 0; i < Nx + 1; i++) {// Cambio Nx+1 por Nx
-        u[0][i] = g_media0(i, t0);
-        cout << u[0][i]<<endl;
+        g[0][i] = g_media0(i, t0);
     }
 
     J = new long double *[3];
@@ -536,51 +535,74 @@ void VolFinitos::calcular() {
     long double k2 = 0;
     long double k3 = 0;
 
-    long double incTime = 0;
-    bool tiempoFino = false;
+    long double incTime = 0;//Variable que define \Delta t
+    bool tiempoFino = false;//Variable booleana para comprobar si el 
+                      //salto temporal cumple unas condiciones impuestas
+                      //Se usa para el caso de un salto temporal variable.
 
     long double vecDomTiempoAux = 0;
     vector<long double > domTiempo;
     domTiempo.push_back(t0);
 
-    vector<long double > domTiempo_printed;
+    vector<long double > domTiempo_printed;//Vector donde guardar cada uno de los tiempos usados en las iteraciones
 
-    long double error = 0;
+    long double error = 0; //Error de aproximacion en cada salto temporal
+                           //respecto a una solución exacta conocida.
     int indiceErrores = 1;
-    vector<long double > errores;
+    vector<long double > errores;//Aray donde guardar los errores de cada salto
+                                //temporal
     errores.push_back(0);
 
     long double tiempoAcumulado = 0;
-    int porcentajeRK = 0;
+    int porcentajeRK = 0;//Variable para mostrar en pantalla el porcentaje 
+    //de la simulación completado.
 
+    cout << ">>> RK3 >>>" << endl; 
+    
     while (domTiempo[z - 1] < tFinal) {
 
-        incTime = incTiempo;
-        long double value = 0;
-        tiempoFino = false;
+        incTime = incTiempo;//Tiempo fijo \Delta t definido en la clase main()
+        long double value = 0;//Variable auxiar para evaluar el valor la diferencia entre 
+                              //n(x,t^n) y n(x,t^{n+1})
+        tiempoFino = false;//Boleano para ver si el mallado temporal variable es apto.
         int ll;
 
         long double vFinal;
         int binarioParidad = 2;
         int numValoresNegativos = 0;
-        while (tiempoFino == false) {
+        
+        ///////////////////////////////////
+        ///Bucle para evaluar el salto temporal en cada instante
+        //Reduce \Delta t si no cumple las condiciones del bucle:
+        //      1. |n(x,t^{n+1})-n(x,t^n})|<=0.0005 en este caso
+        //      2. La aproximación tenga más de umbral de puntos definido que
+        //         sean negativos. En este caso hay un límite de subdivisión de 
+        //         \Delta t; si se alcaza ese límite el programa se para y muestra
+        //         un Warning por pantalla.
+        //
+        //En caso de querer un dominio temporal fijo, basta con imponer una condición
+        //falsa el bucle para que no se ejecute.
+        while (tiempoFino == false && pasoAdaptativo==true) {
             ll = 0;
             double incLL;
+            //Mediante la variable "binarioParidad" se testea puntos salteados mediante el siguiente
+            //bloque IF, de modo que no se revisen todos los puntos del mallado computacional, sino
+            //que estos cambien en cada iteracion y así la simulación no se alargue mucho. 
             if (binarioParidad % 2 == 0) {
                 incLL = 1;
             } else {
                 incLL = 4;
             }
             while (ll <= Nx) {
-                k1 = du(ll, 0, 1);
-                k2 = du(ll, incTime * k1 / 3.0, 2);
-                k3 = du(ll, 2 * incTime * k2 / 3.0, 3);
+                k1 = dg(ll, 0, 1);
+                k2 = dg(ll, incTime * k1 / 3.0, 2);
+                k3 = dg(ll, 2 * incTime * k2 / 3.0, 3);
 
                 value = incTime * (k1 + 3 * k3) / 4.0;
 
-                vFinal = u[0][ll] + value;
+                vFinal = g[0][ll] + value;
 
-                if (abs(value) > 0.0005) {
+                if (abs(value) > 0.0001) {
                     incTime = 0.5 * incTime;
                     break;
                 }
@@ -590,7 +612,7 @@ void VolFinitos::calcular() {
                 } else if (vFinal < 0 && incTime < 1e-1) {
                     numValoresNegativos++;
                     int umbralMaximoValoresNegativos = 5;
-                    if (vFinal > -1e-10 && numValoresNegativos < umbralMaximoValoresNegativos) {
+                    if (vFinal > -1e-10 && numValoresNegativos < umbralMaximoValoresNegativos && 1<0) {
                         cout << "[WARNING]: Valor negativo de la aproximación (sección ";
                         cout << ll; cout << "; ";
                         cout << vFinal;
@@ -610,18 +632,23 @@ void VolFinitos::calcular() {
             }
         }
         binarioParidad++;
+        //
+        //Fin bucle de adaptación del dominio temporal.
+        //////////////////////
+
 
         vecDomTiempoAux = domTiempo[z - 1] + incTime;
         domTiempo.resize(z + 1, vecDomTiempoAux);
 
+        //Aplicacion del metodo de Runge-Kutta.
         for (int i = 0; i <= Nx; i++) {
-            k1 = du(i, 0, 1);
-            k2 = du(i, incTime * k1 / 3.0, 2);
-            k3 = du(i, 2 * incTime * k2 / 3.0, 3);
+            k1 = dg(i, 0, 1);
+            k2 = dg(i, incTime * k1 / 3.0, 2);
+            k3 = dg(i, 2 * incTime * k2 / 3.0, 3);
 
-            u[1][i] = u[0][i] + incTime * (k1 + 3 * k3) / 4.0;
+            g[1][i] = g[0][i] + incTime * (k1 + 3 * k3) / 4.0;
 
-            if (isnan(u[1][i]) == true) {
+            if (isnan(g[1][i]) == true) {
                 cout << "[ERROR] Aproximación cancelada: Nan." << endl;
                 std::exit(EXIT_FAILURE);
             }
@@ -629,40 +656,47 @@ void VolFinitos::calcular() {
 
 
         for (int i = 0; i < Nx + 1; i++) {
-            u[0][i] = u[1][i];
+            g[0][i] = g[1][i];
         }
 
         tiempoAcumulado = tiempoAcumulado + incTime;
 
-        if (tiempoAcumulado >= 0) {
+        if (tiempoAcumulado >= 0.005) {//De esta forma se guarda en el fichero de texto
+            //puntos con una distancia temporal mínima, para asi evitar que el fichero
+            //generado sea de mucho tamaño.
             error = 0;
             domTiempo_printed.resize(indiceErrores, vecDomTiempoAux);
             indiceErrores++;
             tiempoAcumulado = 0;
 
             for (int j = 0; j < Nx + 1; j++) {
-                fichero << u[1][j] / xi[j];
+                fichero << g[1][j] / xi[j];//Escritura de soluciones en el fichero de texto
 
                 if (j == Nx) {
                     fichero << "\n";
                 } else {
                     fichero << ";";
                 }
-
-                error = error + (x12[j + 1] - x12[j]) * abs(u[1][j] - xi[j] * fIni(xi[j], domTiempo[z]));
+                //Introduccion de los errores de calculo  
+                error = error + (x12[j + 1] - x12[j]) * abs(g[1][j] - xi[j] * fIni(xi[j], domTiempo[z]));
             }
             errores.resize(indiceErrores, error);
         }
-
+        //
+        //Mostrado por pantalla del porcentaje completado de la simulación 
         if (((int) (100 * (domTiempo[z - 1] / tFinal))) > porcentajeRK) {
             porcentajeRK = ((int) (100 * (domTiempo[z - 1] / tFinal)));
             cout << std::to_string((int) (100 * (domTiempo[z - 1] / tFinal))) + " % ; t=";
             cout << domTiempo[z - 1] << endl;
         }
-        cout << domTiempo[z - 1] << endl;
+        //cout << domTiempo[z - 1] << endl;
         z = z + 1;
     }
-
+    
+    
+    //Guardado en el fichero de texto el array de errores respecto a soluciones conocidas.No se guardan todos, sino los que 
+    //cumplan un mínimo \Delta t en función de la variable "tiempoAcumulado" para así evitar un 
+    //exceso de tamaño del fichero.
     for (int i = 1; i < indiceErrores; i++) {
         fichero << errores[i];
         if (i + 1 < indiceErrores) {
@@ -671,13 +705,16 @@ void VolFinitos::calcular() {
     }
     ////
     fichero << "\n";
-
+    //Guardado en el fichero de texto los instantes temporales. No se guardan todos, sino los que 
+    //cumplan un mínimo \Delta t en función de la variable "tiempoAcumulado" para así evitar un 
+    //exceso de tamaño del fichero.
     for (int i = 1; i < indiceErrores - 1; i++) {
         fichero << domTiempo_printed[i];
         fichero << ";";
     }
 
-    time(&end);
+    //////////
+    time(&end);//Fin del cálculo del tiempo de ejecución del programa
 
     double tiempoEjecucion = double(end - start);
     fichero << "\n";

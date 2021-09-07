@@ -30,20 +30,28 @@ using namespace std;
 int main(int argc, char** argv) {
 
     /*
-    cout<< "Seccional:---" << endl;
-    Seccional secRK3 = Seccional("./simulaciones/seccional/2s-seccional_RK3_ID_simpComp_50");
-    //insertarGrid(double v0, double R, int m, int numParticionesIntegrales, bool dominioEquiespaciado,double logPuntosGrid)
-    secRK3.insertarGrid(1e-10,50,50,400,false,0.01);
+    cout<< "Seccional: (Simpson y RK3)"" << endl;
+    Seccional secRK3 = Seccional("./simulaciones/seccional/seccional_nx100_simpsonCompuesto_1");
+    
+    //insertarGrid(double v0, double R, int m, int numParticionesIntegrales, bool dominioEquiespaciado, bool pasoAdaptativo)
+    secRK3.insertarGrid(1e-4,500,100,400,false, true);
     //insertarTiempo(double t0, double tFinal, double incTiempo)
-    secRK3.insertarTiempo(0, 2, 1e-2);
+    secRK3.insertarTiempo(0.001, 2, 1e-2);
     secRK3.calcular();
     */
     
-    cout<< "Volumenes finitos:---" << endl;
-    VolFinitos vol1=VolFinitos("./simulaciones/vol_finitos/2s-vol_finitos_RK3_ID_simpson_compuesto_50");
-    //insertarGrid(double xInicio, double R, double Nx, int numParticionesIntegrales, bool dominioEquiespaciado, double kdominio)
-    vol1.insertarGrid(1e-10,50,50,400,false,1.1);
-    vol1.insertarTiempo(0,2,1e-2);
+//////////////////////////////////////////    
+//////////////////////////////////////////
+    
+    
+    cout<< "Volumenes finitos: (Simpson y RK3)" << endl;
+    VolFinitos vol1=VolFinitos("./simulaciones/vol_finitos/volFinitos_nx100_simpsonCompuesto_1");
+    
+    //insertarGrid(double xInicio, double R, double Nx, int numParticionesIntegrales, bool dominioEquiespaciado, bool pasoAdaptativo)
+    vol1.insertarGrid(1e-4,500,100,400,false, true);
+    
+    //insertarTiempo(double t0, double tFinal, double incTiempo)
+    vol1.insertarTiempo(0.001,2,1e-2);
     vol1.calcular();
     
     
