@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=EC_Coagulacion
+PROJECTNAME=Ec_Coagulacion_RK2
 
 # Active Configuration
 DEFAULTCONF=Debug

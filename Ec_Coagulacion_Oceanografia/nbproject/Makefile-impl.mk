@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=oceanografia
+PROJECTNAME=Ec_Coagulacion_Oceanografia
 
 # Active Configuration
 DEFAULTCONF=Debug
