@@ -131,7 +131,6 @@ public:
     long double A(int j, long double x_k);
     long double B(int i, long double x_k, int alfa);
     int getAlfa(int i, int k);
-    void xVector(std::vector<long double> & v, int lenV, long double v0, long double R, long double corte1, long double corte2);
     
     long double dg(int i, long double add, int kS);
 

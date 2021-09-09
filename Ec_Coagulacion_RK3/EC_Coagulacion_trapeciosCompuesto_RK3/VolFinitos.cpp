@@ -382,7 +382,7 @@ long double VolFinitos::dg(int i, long double add, int kS) {
     }
 
     J[kS - 1][i + 1] = suma;
-    kReturn = -(J[kS - 1][i + 1] - J[kS - 1][i]) / (x12[i + 1] - x12[i]);// - (w[i] / (Z)) * uAux[i] + I[i] * xi[i];
+    kReturn = -(J[kS - 1][i + 1] - J[kS - 1][i]) / (x12[i + 1] - x12[i]);
 
     return kReturn;
 }
@@ -420,7 +420,7 @@ void VolFinitos::calcular() {
         xi[i] = (x12[i] + x12[i + 1]) / 2.0;
     }
 
-;
+    
     cout << "--------------" << endl;
     cout << "Intervalos de tiempo:";
     cout << numIntervalosTiempo << endl;
@@ -540,10 +540,6 @@ void VolFinitos::calcular() {
     }
     //////////
     int z = 1;
-
-    long double suma = 0;
-    long double sumaK = 0;
-    long double sumaJ = 0;
 
     long double k1 = 0;
     long double k2 = 0;
