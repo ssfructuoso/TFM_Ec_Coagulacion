@@ -1,2 +1,3 @@
 #No subir a Github el fichero con las simulaciones porque es muy pesado y genera incompatibilidades con la plataforma
 /plot_graficas/ficheros_simulaciones/**
+*.md

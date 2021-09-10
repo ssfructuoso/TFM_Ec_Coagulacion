@@ -46,8 +46,18 @@ using namespace std;
 const long double PI = std::atan(1.0)*4;
 
 /*
- * Distribucion inicial de puntos: en este caso es la solucion en t_0 para el nucleo producto.
+ * Distribución inicial de puntos para el núcleo suma
  */
+long double Seccional::densidadN0(long double v, long double t) {
+    long double n = pow(2 * PI, -0.5) * exp(-t) * pow(v, -1.5) * exp(-v * 0.5 * exp(-2 * t));
+    return n;
+}
+ 
+
+
+/*
+ * Distribucion inicial de puntos: en este caso es la solucion en t_0 para el nucleo producto.
+ 
 long double Seccional::densidadN0(long double v, long double t) {
     auto bessel = [&] (long double s) {
         long double limInf = 0;
@@ -93,17 +103,9 @@ long double Seccional::densidadN0(long double v, long double t) {
     }
     return n;
 }
+ * */
 
-/*
- * Distribución inicial de puntos para el núcleo suma/identidad.
-long double Seccional::densidadN0(long double v, long double t) {
-    double M00=1.;
-    long double n = pow(((2 * M00) / (2 + M00 * t)), 2) * exp(-2 * M00 * v / (2 + M00 * t));
-    //long double n = pow(2 * PI, -0.5) * exp(-t) * pow(v, -1.5) * exp(-v * 0.5 * exp(-2 * t));
-    //n = 100 * exp(-v);
-    return n;
-}
- */
+
 
 /*
  * Promedio de la distribución inicial de puntos.
@@ -169,7 +171,7 @@ long double Seccional::ker(long double x, long double y) {
  * Kernel de la ecuacion de coagulacion
  */
 long double Seccional::ker(long double x, long double y) {
-    return x*y;
+    return x+y;
 }
 
 
