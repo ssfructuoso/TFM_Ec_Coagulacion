@@ -63,7 +63,7 @@ A continuación se muestra un ejemplo de cómo utilizar los programas. En este c
           * 5. m: numero de puntos definidos en el mallado de la variable v
           * 6. pasoAdaptativo: determina si se aplica un paso adaptativo en la aproximacion temporal o no; en este caso si se ha aplicado.
           */
-          secRK3.insertarGrid(1e-4,500,50,400,false,true);
+          secRK3.insertarGrid(1e-4,200,50,400,false,true);
             
           /*###
           * insertarTiempo(double t0, double tFinal, double incTiempo)
@@ -79,7 +79,7 @@ A continuación se muestra un ejemplo de cómo utilizar los programas. En este c
       
     ```
     
- 4. Ejecutamos el programa. Mientras esté corriendo va a ir mostrando por pantalla el porcentaje completado. Cuando finalice se habrá generado el fichero [seccional_nx100_trapeciosCompuesto_KerSUMA](https://github.com/ssfructuoso/TFM_Ec_Coagulacion/blob/main/Ec_Coagulacion_RK3/EC_Coagulacion_trapeciosCompuesto_RK3/simulaciones/seccional/seccional_nx50_trapeciosCompuesto_KerSUMA.txt).
+ 4. Ejecutamos el programa. Mientras esté corriendo va a ir mostrando por pantalla el porcentaje completado. Cuando finalice se habrá generado el fichero [seccional_nx50_trapeciosCompuesto_KerSUMA](https://github.com/ssfructuoso/TFM_Ec_Coagulacion/blob/main/Ec_Coagulacion_RK3/EC_Coagulacion_trapeciosCompuesto_RK3/simulaciones/seccional/seccional_nx50_trapeciosCompuesto_KerSUMA.txt).
 
  5. Enlazamos la ruta del fichero (o lo copiamos a una ruta que interese) en cualquiera de los scripts de representación gráfica de la carpeta [plot_graficas](https://github.com/ssfructuoso/TFM_Ec_Coagulacion/tree/main/plot_graficas). 
     Por ejemplo, si se busca graficar las soluciones obtenidas en las simulaciones se utiliza el script [plot_general.py](https://github.com/ssfructuoso/TFM_Ec_Coagulacion/blob/main/plot_graficas/plot_general.py). Hay que indicar la ruta donde esté localizado el fichero de texto resultante de la simulación
