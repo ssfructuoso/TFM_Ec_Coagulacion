@@ -55,11 +55,6 @@ long double VolFinitos::fIni(long double x, long double t) {
 }
 
 
-/*
- * 
- */
-
-
 long double VolFinitos::f_media0(int i, long double t) {
     long double dom_Lambda[2];
     dom_Lambda [0] = x12[i];
@@ -395,7 +390,7 @@ void VolFinitos::calcular() {
         //cout<< xi[i]<< endl;
     }
     
-        /////////////////////////////
+    /////////////////////////////
     ////Variables Oceanografia
     //En SI
     g_gravedad = 9.8; // m/s^2 
@@ -403,7 +398,6 @@ void VolFinitos::calcular() {
     T = 293; //Kelvin 20 C
     din_viscosity =0.00109 ; //N*d/m²
     sh_rate = 5; // N*s/m2
-    //p_0 = 2.26e11; // cg/m³
     p_0 = 1170;   //kg/m³
     p_w = 1025; // kg/m³
     Z = 3; //m
@@ -416,8 +410,7 @@ void VolFinitos::calcular() {
         w[i] = (g_gravedad / (6 * PI * din_viscosity *(a_0 / xi[0])))*(1. / p_w - 1. / p_0) * pow(xi[i], 1 - 1. / D);
     }
     
- 
-    I[0] = 6.023*pow(10,8);
+    I[0] = 6.023*pow(10,8); //(en num_particulas/(s m^3))
 
     ////////////////////////////   
     

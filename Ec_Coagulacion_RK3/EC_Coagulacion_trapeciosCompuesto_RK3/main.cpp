@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /* 
  * File:   main.cpp
  * Author: Salvador Fructuoso
@@ -48,14 +42,14 @@ int main(int argc, char** argv) {
     //Metodo de volumenes finitos 
     /*
     cout<< "Volumenes finitos: (Trapecios y RK3) " << endl;
-    VolFinitos vol1=VolFinitos("./simulaciones/vol_finitos/volFinitos_nx100_trapeciosCompuesto_1");
+    VolFinitos volRK3=VolFinitos("./simulaciones/vol_finitos/volFinitos_nx100_trapeciosCompuesto_1");
     
     //insertarGrid(double xInicio, double R, double Nx, int numParticionesIntegrales, bool dominioEquiespaciado, bool pasoAdaptativo)
-    vol1.insertarGrid(1e-4,500,100,400,false, true);
+    volRK3.insertarGrid(1e-4,500,100,400,false, true);
     
     //insertarTiempo(double t0, double tFinal, double incTiempo)
-    vol1.insertarTiempo(0.001,2,1e-2);
-    vol1.calcular();
+    volRK3.insertarTiempo(0.001,2,1e-2);
+    volRK3.calcular();
     */
     
     

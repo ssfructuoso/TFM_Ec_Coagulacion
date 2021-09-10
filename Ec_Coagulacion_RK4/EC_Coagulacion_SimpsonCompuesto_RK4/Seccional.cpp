@@ -836,7 +836,6 @@ long double Seccional::dQ(int l, long double add) {
     if (l > 1) {
         for (int i = 1; i < l; i++) {
             for (int j = 1; j < l; j++) {
-                //17May : cambio l-1 por l-2
                 suma1 = suma1 + C1[i - 1][j - 1][l - 2] * QAux[j - 1] * QAux[i - 1];
             }
         }
@@ -852,9 +851,7 @@ long double Seccional::dQ(int l, long double add) {
     suma3 = 0.5 * C3[l - 1] * pow(QAux[l - 1], 2);
 
     if (l < m) {
-        //cambio el i=2 por l+1
         for (int i = l + 1; i < m + 1; i++) {
-            //17May : cambio l-1 por l-2
             suma4 = suma4 + C4[i - 2][l - 1] * QAux[i - 1];
 
         }
@@ -862,7 +859,6 @@ long double Seccional::dQ(int l, long double add) {
     }
     k = suma1 - suma2 - suma3 - suma4;
 
-    //k = k - w[l - 1] / Z * QAux[l - 1] + I[l - 1] * factorQ[l - 1];
     return k;
 
 }

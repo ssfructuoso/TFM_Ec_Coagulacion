@@ -54,24 +54,11 @@ const long double PI = std::atan(1.0)*4;
  * Distribucion inicial de puntos: en este caso es la solucion en t_0 para el nucleo producto.
  */
 long double Seccional::densidadN0(long double v, long double t) {
-    //long double n;
-    //long double n = pow(((2 * M00) / (2 + M00 * t)), 2) * exp(-2 * M00 * v / (2 + M00 * t));
-    //long double n = pow(2 * PI, -0.5) * exp(-t) * pow(v, -1.5) * exp(-v * 0.5 * exp(-2 * t));
-    //n = 100 * exp(-v);
     long double n = 6.023*pow(10,10)*exp(-pow(v/vi[0],1./8));
     //long double n = 6.023*pow(10,10)*pow(vi[0]/v,0.2);
     return n;
 }
 
-/*
-long double Seccional::densidadN0(long double v, long double t) {
-    double M00=1.;
-    long double n = pow(((2 * M00) / (2 + M00 * t)), 2) * exp(-2 * M00 * v / (2 + M00 * t));
-    //long double n = pow(2 * PI, -0.5) * exp(-t) * pow(v, -1.5) * exp(-v * 0.5 * exp(-2 * t));
-    //n = 100 * exp(-v);
-    return n;
-}
- */
 
 long double Seccional::densidad_media0(int i, long double t) {
 
@@ -616,10 +603,10 @@ void Seccional::calcular() {
     cout << "V[i]----- : " << endl;
     for (int i = 0; i < m; i++) {
         vi[i] = 0.5 * (v[i] + v[i + 1]);
-        cout << vi[i] << endl;
+        //cout << vi[i] << endl;
     }
 
-     /////////////////////////////
+    /////////////////////////////
     ////Variables Oceanografia
     //En SI
     g = 9.8; // m/s^2 
@@ -627,7 +614,6 @@ void Seccional::calcular() {
     T = 293; //Kelvin 20 C
     din_viscosity =0.00109 ; //N*d/m²
     sh_rate = 5; // N*s/m2
-    //p_0 = 2.26e11; // cg/m³
     p_0 = 1170;   //kg/m³
     p_w = 1025; // kg/m³
     Z = 3; //m
@@ -637,12 +623,10 @@ void Seccional::calcular() {
     I = new long double [m];
     for (int i = 0; i < m; i++) {
         I[i] = 0;
-        //w[i] = (g / (6 * PI * (vi[i] / p_0)*(a_0 / vi[0])))*(1. / p_w - 1. / p_0) * pow(vi[i], 1 - 1. / D);
         w[i] = (g / (6 * PI * din_viscosity *(a_0 / vi[0])))*(1. / p_w - 1. / p_0) * pow(vi[i], 1 - 1. / D);
     }
     
-    //I[0] = 10e4 / 86400; // Z=30
-    I[0] = 6.023*pow(10,8); //Z=30 (en num_particulas/s)
+    I[0] = 6.023*pow(10,8); //(en num_particulas/(s m^3))
     ////////////////////////////
     ///////////////////////////
 

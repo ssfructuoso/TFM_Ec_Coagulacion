@@ -593,7 +593,7 @@ void Seccional::calcular() {
                     C1[j - 1][i - 1][l - 2] = C1[i - 1][j - 1][l - 2];
                 }
                 if (isnan(C1[j - 1][i - 1][l - 2]) == true) {
-                    cout << "Error en B1" << endl;
+                    cout << "Error en C1" << endl;
                     std::exit(EXIT_FAILURE);
                 }
             }
@@ -618,7 +618,7 @@ void Seccional::calcular() {
         for (int l = i + 1; l < m + 1; l++) {
             C2[i - 1][l - 2] = coefC2(i - 1, l - 1);
             if (isnan(C2[i - 1][l - 2]) == true) {
-                cout << "Error en B2" << endl;
+                cout << "Error en C2" << endl;
                 std::exit(EXIT_FAILURE);
             }
         }
@@ -639,7 +639,7 @@ void Seccional::calcular() {
     for (int l = 1; l < m + 1; l++) {
         C3[l - 1] = coefC3(l - 1);
         if (isnan(C3[l - 1]) == true) {
-            cout << "Error en B3" << endl;
+            cout << "Error en C3" << endl;
             std::exit(EXIT_FAILURE);
         }
         porcentaje = (int) (100 * l / m);
@@ -659,7 +659,7 @@ void Seccional::calcular() {
         for (int l = 1; l < i; l++) {
             C4[i - 2][l - 1] = coefC4(i - 1, l - 1);
             if (isnan(C4[i - 2][l - 1]) == true) {
-                cout << "Error en B4" << endl;
+                cout << "Error en C4" << endl;
                 std::exit(EXIT_FAILURE);
             }
 

@@ -406,7 +406,6 @@ void VolFinitos::calcular() {
         xi[i] = (x12[i] + x12[i + 1]) / 2.0;
     }
 
-;
     cout << "--------------" << endl;
     cout << "Intervalos de tiempo:";
     cout << numIntervalosTiempo << endl;

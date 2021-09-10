@@ -554,7 +554,7 @@ void VolFinitos::calcular() {
     cout << "Valores integrales iniciales:"<<endl;
     for (int i = 0; i < Nx + 1; i++) {// Cambio Nx+1 por Nx
         u[0][i] = g_media0(i, t0);
-        cout << u[0][i]<<endl;
+        //cout << u[0][i]<<endl;
     }
 
     J = new long double *[4];
@@ -700,7 +700,7 @@ void VolFinitos::calcular() {
             cout << std::to_string((int) (100 * (domTiempo[z - 1] / tFinal))) + " % ; t=";
             cout << domTiempo[z - 1] << endl;
         }
-        cout << domTiempo[z - 1] << endl;
+        //cout << domTiempo[z - 1] << endl;
         z = z + 1;
     }
 

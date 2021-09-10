@@ -30,7 +30,7 @@ using namespace std;
 int main(int argc, char** argv) {
 
     /*
-    cout<< "Seccional: (MidPoint Rule y RK3)"" << endl;
+    cout<< "Seccional: (MidPoint Rule y RK3)" << endl;
     Seccional secRK3 = Seccional("./simulaciones/seccional/seccional_nx100_midpoint_1");
     
     //insertarGrid(double v0, double R, int m, int numParticionesIntegrales, bool dominioEquiespaciado, bool pasoAdaptativo)
@@ -45,14 +45,14 @@ int main(int argc, char** argv) {
     
     
     cout<< "Volumenes finitos: (MidPoint Rule y RK3)" << endl;
-    VolFinitos vol1=VolFinitos("./simulaciones/vol_finitos/volFinitos_nx100_midpoint_1");
+    VolFinitos volRK3=VolFinitos("./simulaciones/vol_finitos/volFinitos_nx100_midpoint_1");
     
     //insertarGrid(double xInicio, double R, double Nx, int numParticionesIntegrales, bool dominioEquiespaciado, bool pasoAdaptativo)
-    vol1.insertarGrid(1e-4,500,100,400,false, true);
+    volRK3.insertarGrid(1e-4,500,100,400,false, true);
     
     //insertarTiempo(double t0, double tFinal, double incTiempo)
-    vol1.insertarTiempo(0.001,2,1e-2);
-    vol1.calcular();
+    volRK3.insertarTiempo(0.001,2,1e-2);
+    volRK3.calcular();
     
      
     
