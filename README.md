@@ -60,9 +60,10 @@ A continuación se muestra un ejemplo de cómo utilizar los programas. En este c
           *  El particionado en las integrales es equiespaciado y variable.
           * 4. dominioEquiespaciado: determina si el dominio de la variable espacial es equiespaciado o logaritmico. Si dominioEquiespaciado=false entonces
           * el dominio es logaritmico.
-          * 5. pasoAdaptativo: determina si se aplica un paso adaptativo en la aproximacion temporal o no; en este caso si se ha aplicado.
+          * 5. m: numero de puntos definidos en el mallado de la variable v
+          * 6. pasoAdaptativo: determina si se aplica un paso adaptativo en la aproximacion temporal o no; en este caso si se ha aplicado.
           */
-          secRK3.insertarGrid(1e-4,500,100,400,false,true);
+          secRK3.insertarGrid(1e-4,500,50,400,false,true);
             
           /*###
           * insertarTiempo(double t0, double tFinal, double incTiempo)
