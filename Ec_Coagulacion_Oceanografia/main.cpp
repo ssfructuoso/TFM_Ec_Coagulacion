@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
     
     
     cout<< "Seccional:---" << endl;
-    Seccional secRK3 = Seccional("./simulaciones/v5/SECC_test-100_e-13mol_Z3_6m_EXPONENCIAL_1m");
+    Seccional secRK3 = Seccional("./simulaciones/SECC_test-100_e-13mol_Z3_6m_EXPONENCIAL_1m");
     //insertarGrid(double v0, double R, int m, int numParticionesIntegrales, bool dominioEquiespaciado, bool pasoAdaptativo)
     secRK3.insertarGrid(1.9268e-15,5.13925e-6,50,400,false,false);
     //insertarTiempo(double t0, double tFinal, double incTiempo)
@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
     
     /*
     cout<< "Volumenes finitos:---" << endl;
-    VolFinitos vol1=VolFinitos("./simulaciones/v5/VOL_TESTs_e-13mol_Z3_6m_EXPONENCIAL_1m");
+    VolFinitos vol1=VolFinitos("./simulaciones/VOL_TESTs_e-13mol_Z3_6m_EXPONENCIAL_1m");
     //insertarGrid(double xInicio, double R, double Nx, int numParticionesIntegrales, bool dominioEquiespaciado,bool pasoAdaptativo)
     vol1.insertarGrid(1.9268e-15,5.13925e-6,49,400,false,false);//SI (2.45044e-15, 4.23436e-6)
     //vol1.insertarGrid(0.936e-16,247.17,99,400,false,1.1); //Test de exp-x con el seccional
@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
     
     /*
     cout<< "Volumenes finitos:---" << endl;
-    VolFinitos vol1=VolFinitos("./simulaciones/v5/VOL-100_e-13mol_Z3_6m_EXPONENCIAL");
+    VolFinitos vol1=VolFinitos("./simulaciones/VOL-100_e-13mol_Z3_6m_EXPONENCIAL");
     //insertarGrid(double xInicio, double R, double Nx, int numParticionesIntegrales, bool dominioEquiespaciado, bool pasoAdaptativo)
     //vol1.insertarGrid(1.084e-16,222,250,400,false,false); // 1nm a 1.2mm (en centigramos)
     //vol1.insertarGrid(5.8e-8,111.5,200,400,false,1.1); e-5 g
