@@ -96,5 +96,5 @@ A continuación se muestra un ejemplo de cómo utilizar los programas. En este c
     Es posible configurar más puntos relativos al graficado modificando valores de los métodos usados del paquete Matplotlib.
     
     Se obtiene la siguiente gráfica:
-     !!!
+    ![Seccional_Kernel_Suma](https://github.com/ssfructuoso/TFM_Ec_Coagulacion/tree/main/plot_graficas)
      
