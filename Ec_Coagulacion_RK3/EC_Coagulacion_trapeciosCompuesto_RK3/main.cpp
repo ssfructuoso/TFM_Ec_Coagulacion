@@ -32,10 +32,10 @@ int main(int argc, char** argv) {
 
     //Metodo seccional
     cout<< "Seccional: (Trapecios y RK3)" << endl;
-    Seccional secRK3 = Seccional("./simulaciones/seccional/seccional_nx100_trapeciosCompuesto_KerSUMA");
+    Seccional secRK3 = Seccional("./simulaciones/seccional/seccional_nx50_trapeciosCompuesto_KerSUMA");
     
     //insertarGrid(double v0, double R, int m, int numParticionesIntegrales, bool dominioEquiespaciado, bool pasoAdaptativo)
-    secRK3.insertarGrid(1e-4,500,100,400,false, true);
+    secRK3.insertarGrid(1e-4,200,50,400,false, true);
     
     //insertarTiempo(double t0, double tFinal, double incTiempo)
     secRK3.insertarTiempo(0.001, 2, 1e-2);

@@ -30,21 +30,21 @@ using namespace std;
 int main(int argc, char** argv) {
     
     cout<< "Seccional:---" << endl;
-    Seccional secRK3 = Seccional("./simulaciones/seccional/2s-seccional_RK4_SUMA-mid_point_200");
-    //insertarGrid(double v0, double R, int m, int numParticionesIntegrales, bool dominioEquiespaciado,double logPuntosGrid)
-    secRK3.insertarGrid(1e-3,500,200,400,false,0.01);
+    Seccional secMidPoint = Seccional("./simulaciones/seccional/2s-seccional_RK4_SUMA-mid_point_200");
+    //insertarGrid(double v0, double R, int m, int numParticionesIntegrales, bool dominioEquiespaciado, bool pasoAdaptativo)
+    secMidPoint.insertarGrid(1e-3,500,200,400,false,true);
     //insertarTiempo(double t0, double tFinal, double incTiempo)
-    secRK3.insertarTiempo(0, 2, 1e-2);
-    secRK3.calcular();
+    secMidPoint.insertarTiempo(0, 2, 1e-2);
+    secMidPoint.calcular();
     
     
     /*
     cout<< "Volumenes finitos:---" << endl;
-    VolFinitos vol1=VolFinitos("./simulaciones/vol_finitos/2s-vol_finitos_RK4_ID_mid_point_50");
-    //insertarGrid(double xInicio, double R, double Nx, int numParticionesIntegrales, bool dominioEquiespaciado, double kdominio)
-    vol1.insertarGrid(1e-10,50,50,400,false,1.1);
-    vol1.insertarTiempo(0,2,1e-2);
-    vol1.calcular();
+    VolFinitos volMidPoint=VolFinitos("./simulaciones/vol_finitos/2s-vol_finitos_RK4_ID_mid_point_50");
+    //insertarGrid(double xInicio, double R, double Nx, int numParticionesIntegrales, bool dominioEquiespaciado, bool pasoAdaptativo)
+    volMidPoint.insertarGrid(1e-10,50,50,400,false,true);
+    volMidPoint.insertarTiempo(0,2,1e-2);
+    volMidPoint.calcular();
     */
     return 0;
 }

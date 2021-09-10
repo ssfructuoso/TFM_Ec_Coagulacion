@@ -11,7 +11,7 @@ from decimal import Decimal
 ###################################
 
 
-datosTxt='ficheros_simulaciones/SECCIONAL/RK3/trapecios_compuesto/seccional_RK3_ID_trapecios_compuesto_100.txt'
+datosTxt='Ec_Coagulacion_RK3/EC_Coagulacion_trapeciosCompuesto_RK3/simulaciones/seccional/seccional_nx50_trapeciosCompuesto_KerSUMA.txt'
 
 
 dfHeader = pandas.read_csv(datosTxt, sep=';',delimiter=';',nrows=1,names=["0","1","2","3","4","5","6"])
@@ -59,7 +59,7 @@ df1=pandas.read_csv(io.StringIO('\n'.join(lastLines1)), sep=';', header=None, er
 tiempo=df1.iloc[1]
 tiempo=tiempo.to_numpy()
 
-#En segundos
+
 tiempo1=0.25
 tiempo2=0.8
 tiempo3=1
@@ -98,7 +98,7 @@ plt.plot(xi,xi*g[pos4,:],'m',label="t="+str(tiempo4))
 plt.xlabel('x')
 plt.ylabel('xn(x,t)')
 plt.legend()
-plt.title('Seccional (Ker(x,y)=1)')
+plt.title('Seccional (Ker(x,y)=x+y)')
 #print(pos1, pos2, pos3, pos4)
 
 plt.figure(2)

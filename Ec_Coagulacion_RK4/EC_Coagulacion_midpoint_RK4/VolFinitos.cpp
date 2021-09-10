@@ -1,7 +1,16 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Clase para la simulacion de soluciones de la ecuacion de Smoluchowski
+ * utilizando un metodo de volumenes finitos.
+ * En este codigo primeramente se definen distintas funciones (calculo de coeficientes seccionales,
+ * definicion del nucleo, etc) para luego poder plasmar y calcular el esquema numerico en la 
+ * funcion "calcular()".
+ * 
+ * Los resultados obtenidos se guardan en un fichero de texto con un formato que se puede consultar en la 
+ * funcion "calcular()".
+ * 
+ * En las formulas de cuadratura se aplica el metodos de la Regla del Punto Medio y un metodo de Runge-Kutta 
+ * de orden 4 para la aproximacion temporal.
+ * 
  */
 
 /* 
@@ -289,13 +298,13 @@ VolFinitos::VolFinitos(const char * nombreTxtResultado) {
     this->nombreTxtResultado = nombreTxtResultado;
 }
 
-void VolFinitos::insertarGrid(long double xInicio, long double R, long double Nx, int numParticionesIntegrales, bool dominioEquiespaciado, long double kdominio) {
+void VolFinitos::insertarGrid(long double xInicio, long double R, long double Nx, int numParticionesIntegrales, bool dominioEquiespaciado, bool pasoAdaptativo) {
     this->xInicio = xInicio;
     this->R = R;
     this->Nx = Nx;
     this->numParticionesIntegrales = numParticionesIntegrales;
     this->dominioEquiespaciado = dominioEquiespaciado;
-    this->kdominio = kdominio;
+    this->pasoAdaptativo = pasoAdaptativo;
 }
 
 void VolFinitos::insertarTiempo(long double t0, long double tFinal, long double incTiempo) {
@@ -371,48 +380,7 @@ void VolFinitos::calcular() {
         xi[i] = (x12[i] + x12[i + 1]) / 2.0;
     }
 
-
-    /*
-    g=7.321e10;// m/d² 
-    kBolztmann=1.380649e-23; // J/K
-    T=298; //Kelvin
-    din_viscosity=1.0325e-8; //N*d/m²
-    sh_rate=86400; // N*s/m2
-    p_0=2.25e12;// ug/m³
-    p_w=1.027e12;// ug/m³
-    Z = 30; //m
-    a_0=pow(3*xi[0]/(4*PI*p_0),1./3); //Simetria esferica para las primeras particulas
-    D = 2.6; //Dimension fractal
-    w = new long double [Nx+1];
-    I = new long double [Nx + 1];
-    for (int i = 0; i < Nx + 1; i++) {
-        I[i] = 0;
-        w[i]=(g/(6*PI*(xi[i]/p_0)*(a_0/xi[0])))*(1./p_w-1./p_0)*pow(xi[i],1-1./D);
-    }
-    I[0] = 1000;//ug/m³*d^(-1)
-    //
-     * */
-
-    g = 9.8; // m/d² 
-    kBolztmann = 1.380649e-23; // J/K
-    T = 298; //Kelvin
-    din_viscosity = 0.0008921; //N*d/m²
-    sh_rate = 1; // N*s/m2
-    p_0 = 2.25e12; // ug/m³
-    p_w = 1.027e12; // ug/m³
-    Z = 30; //m
-    a_0 = pow(3 * xi[0] / (4 * PI * p_0), 1. / 3); //Simetria esferica para las primeras particulas
-    D = 2.6; //Dimension fractal
-    w = new long double [Nx + 1];
-    I = new long double [Nx + 1];
-    for (int i = 0; i < Nx + 1; i++) {
-        I[i] = 0;
-        w[i] = (g / (6 * PI * (xi[i] / p_0)*(a_0 / xi[0])))*(1. / p_w - 1. / p_0) * pow(xi[i], 1 - 1. / D);
-    }
-    I[0] = 10e5/86400;//ug/m³*d^(-1 Z=30
-    //I[0] = 10e4 / 86400;
-    //
-
+    
     /////////////
     //int numIntervalosT = (int) ((tFinal - t0) / estTiempo) + 1;
     cout << "--------------" << endl;
@@ -564,7 +532,7 @@ void VolFinitos::calcular() {
         long double vFinal;
         int binarioParidad = 2;
         int numValoresNegativos = 0;
-        while (tiempoFino == false) {
+        while (tiempoFino == false && pasoAdaptativo==true) {
             ll = 0;
             double incLL;
             if (binarioParidad % 2 == 0) {

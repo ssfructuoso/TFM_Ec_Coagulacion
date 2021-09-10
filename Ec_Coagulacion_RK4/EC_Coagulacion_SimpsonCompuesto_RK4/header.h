@@ -35,6 +35,7 @@ class Seccional {
     const char * nombreTxtCoeficientesSeccionales;
     long double logPuntosGrid;
     bool dominioEquiespaciado;
+    bool pasoAdaptativo;
 
     int minimoParticiones = 25;
 
@@ -54,10 +55,10 @@ class Seccional {
     long double g;
     long double Z;
 
-    long double *** B1;
-    long double ** B2;
-    long double * B3;
-    long double ** B4;
+    long double *** C1;
+    long double ** C2;
+    long double * C3;
+    long double ** C4;
 
 
 
@@ -66,14 +67,14 @@ class Seccional {
 public:
     Seccional(const char * nombreTxtResultado);
 
-    void insertarGrid(long double v0, long double R, int m, int numParticionesIntegrales, bool dominioEquiespaciado, long double logPuntosGrid);
+    void insertarGrid(long double v0, long double R, int m, int numParticionesIntegrales, bool dominioEquiespaciado, bool pasoAdaptativo);
     void insertarTiempo(long double t0, long double tFinal, long double incTiempo);
 
     void calcular();
 
     long double densidadN0(long double v, long double t);
     long double densidad_media0(int i, long double t);
-    long double beta(long double x, long double y);
+    long double ker(long double x, long double y);
     long double f_point(long double v);
     long double df(long double v);
     long double fInverse_point(long double x);
@@ -82,10 +83,10 @@ public:
     long double thetaSup(long double limSup, long double valor);
     //void vVector(long double v [], int lenV, long double v0,long  long double R,long  long double corte1,long  long double corte2);
     //void vKerId(long double v [], int lenV, long double v0, long double R);
-    long double coefB1(int i, int j, int l);
-    long double coefB2(int i, int l);
-    long double coefB3(int l);
-    long double coefB4(int i, int l);
+    long double coefC1(int i, int j, int l);
+    long double coefC2(int i, int l);
+    long double coefC3(int l);
+    long double coefC4(int i, int l);
 
     long double dQ(int l, long double add);
 };
@@ -104,7 +105,7 @@ class VolFinitos {
     const char * nombreTxtResultado;
     long double kdominio;
     bool dominioEquiespaciado;
-
+    bool pasoAdaptativo;
     int minimoParticiones = 25;
 
     //////////////////////
@@ -146,7 +147,7 @@ class VolFinitos {
 
 public:
     VolFinitos(const char * nombreTxtResultado);
-    void insertarGrid(long double xInicio, long double R, long double Nx, int numParticionesIntegrales, bool dominioEquiespaciado, long double logPuntosGrid);
+    void insertarGrid(long double xInicio, long double R, long double Nx, int numParticionesIntegrales, bool dominioEquiespaciado, bool pasoAdaptativo);
     void insertarTiempo(long double t0, long double tFinal, long double incTiempo);
 
     void calcular();

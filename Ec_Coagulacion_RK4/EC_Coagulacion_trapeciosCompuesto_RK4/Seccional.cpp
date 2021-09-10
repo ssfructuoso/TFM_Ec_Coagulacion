@@ -1,7 +1,21 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Clase para la simulacion de soluciones de la ecuacion de Smoluchowski
+ * utilizando un metodo seccional.
+ * En este código primeramente se definen distintas funciones (calculo de coeficientes seccionales,
+ * definicion del nucleo, etc) para luego poder plasmar y calcular el esquema numerico en la 
+ * funcion "calcular()".
+ * 
+ * Los resultados obtenidos se guardan en un fichero de texto con un formato que se puede consultar en la 
+ * funcion "calcular()".
+ * 
+ * En las formulas de cuadratura se aplica el metodos de Simpson compuesto y un metodo de Runge-Kutta 
+ * de orden 4 para la aproximacion temporal.
+ *  ----------------------------------------------------------------
+ * 
+ * Este caso está adaptado con un nucleo de Oceanografia y con la definicion de sus variables asociadas en las 
+ * funcion "calcular()"
+ * 
+ * 
  */
 
 /* 
@@ -101,7 +115,7 @@ long double Seccional::beta(long double x, long double y) {
 
 
 
-long double Seccional::beta(long double x, long double y) {
+long double Seccional::ker(long double x, long double y) {
     return x+y;
 }
 
@@ -149,7 +163,7 @@ long double Seccional::thetaSup(long double limSup, long double valor) {
     }
 }
 
-long double Seccional::coefB1(int i, int j, int l) {
+long double Seccional::coefC1(int i, int j, int l) {
     long double vInf = v[l];
     long double vSup = v[l + 1];
     long double limInfX = x[i];
@@ -162,9 +176,6 @@ long double Seccional::coefB1(int i, int j, int l) {
     int nParticionesX = minimoParticiones + (int) (numParticionesIntegrales * (limSupX - limInfX));
     int nParticionesY = minimoParticiones + (int) (numParticionesIntegrales * (limSupY - limInfY));
 
-    //
-
-    //int nParticiones = numParticionesIntegrales;
 
     long double precisionX = (limSupX - limInfX) / nParticionesX;
     long double precisionY = (limSupY - limInfY) / nParticionesY;
@@ -187,7 +198,7 @@ long double Seccional::coefB1(int i, int j, int l) {
      * */
     
     auto integrando = [&](long double x, long double y) {
-        return thetaInfSup(vInf, vSup, x+y)*beta(x,y);
+        return thetaInfSup(vInf, vSup, x+y)*ker(x,y);
     };
     
     //Trapecios compuesto
@@ -234,7 +245,7 @@ long double Seccional::coefB1(int i, int j, int l) {
     return suma;
 }
 
-long double Seccional::coefB2(int i, int l) {
+long double Seccional::coefC2(int i, int l) {
     long double vInf = v[l + 1];
     long double vSup = v[l + 1];
     long double limInfX = x[i];
@@ -272,7 +283,7 @@ long double Seccional::coefB2(int i, int l) {
         };
      * */
     auto integrando = [&](long double x, long double y) {
-        return thetaInf(vInf, x+y)*beta(x,y);
+        return thetaInf(vInf, x+y)*ker(x,y);
     };
 
     //Trapecios compuesto
@@ -319,7 +330,7 @@ long double Seccional::coefB2(int i, int l) {
     return suma;
 }
 
-long double Seccional::coefB3(int l) {
+long double Seccional::coefC3(int l) {
     long double vInf = v[l + 1];
     long double vSup = v[l + 1];
     long double limInfX = x[l];
@@ -357,7 +368,7 @@ long double Seccional::coefB3(int l) {
     };
      * */
     auto integrando = [&](long double x, long double y) {
-        return (thetaInf(vInf, x+y)*2 + thetaSup(vSup, x+y))*beta(x,y);
+        return (thetaInf(vInf, x+y)*2 + thetaSup(vSup, x+y))*ker(x,y);
     };
 
     //Trapecios compuesto
@@ -404,7 +415,7 @@ long double Seccional::coefB3(int l) {
     return suma;
 }
 
-long double Seccional::coefB4(int i, int l) {
+long double Seccional::coefC4(int i, int l) {
     long double limInfX = x[i];
     long double limSupX = x[i + 1];
     long double limInfY = x[l];
@@ -439,7 +450,7 @@ long double Seccional::coefB4(int i, int l) {
      * */
 
     auto integrando = [&](long double x, long double y) {
-        return beta(x,y);
+        return ker(x,y);
     };
     //Trapecios compuesto
     long double sum_aux;
@@ -489,13 +500,13 @@ Seccional::Seccional(const char * nombreTxtResultado) {
     this->nombreTxtResultado = nombreTxtResultado;
 }
 
-void Seccional::insertarGrid(long double v0, long double R, int m, int numParticionesIntegrales, bool dominioEquiespaciado, long double logPuntosGrid) {
+void Seccional::insertarGrid(long double v0, long double R, int m, int numParticionesIntegrales, bool dominioEquiespaciado, bool pasoAdaptativo) {
     this->m = m;
     this->v0 = v0;
     this->R = R;
     this->numParticionesIntegrales = numParticionesIntegrales;
     this->dominioEquiespaciado = dominioEquiespaciado;
-    this->logPuntosGrid = logPuntosGrid;
+    this->pasoAdaptativo=pasoAdaptativo;
 }
 
 void Seccional::insertarTiempo(long double t0, long double tFinal, long double incTiempo) {
@@ -520,26 +531,26 @@ long double Seccional::dQ(int l, long double add) {
         for (int i = 1; i < l; i++) {
             for (int j = 1; j < l; j++) {
                 //17May : cambio l-1 por l-2
-                suma1 = suma1 + B1[i - 1][j - 1][l - 2] * QAux[j - 1] * QAux[i - 1];
+                suma1 = suma1 + C1[i - 1][j - 1][l - 2] * QAux[j - 1] * QAux[i - 1];
             }
         }
         suma1 = 0.5 * suma1;
 
         for (int i = 1; i < l; i++) {
             //!!
-            suma2 = suma2 + B2[i - 1][l - 2] * QAux[i - 1];
+            suma2 = suma2 + C2[i - 1][l - 2] * QAux[i - 1];
 
         }
         suma2 = suma2 * QAux[l - 1];
     }
 
-    suma3 = 0.5 * B3[l - 1] * pow(QAux[l - 1], 2);
+    suma3 = 0.5 * C3[l - 1] * pow(QAux[l - 1], 2);
 
     if (l < m) {
         //cambio el i=2 por l+1
         for (int i = l + 1; i < m + 1; i++) {
             //17May : cambio l-1 por l-2
-            suma4 = suma4 + B4[i - 2][l - 1] * QAux[i - 1];
+            suma4 = suma4 + C4[i - 2][l - 1] * QAux[i - 1];
 
         }
         suma4 = suma4 * QAux[l - 1];
@@ -563,8 +574,7 @@ void Seccional::calcular() {
     v = new long double [m + 1];
     v[m] = v0 + R;
 
-    long double vv [m + 1];
-    vv[m] = v[m];
+  
     if (dominioEquiespaciado == false) {
         ////////////////////////////////
         long double k_esc = pow((v0 + R) / v0, 1. / (m));
@@ -572,7 +582,6 @@ void Seccional::calcular() {
         cout << k_esc << endl;
         for (int i = 0; i < m; i++) {
             v[m - i - 1] = v[m - i] / k_esc;
-            vv[m - i - 1] = v[m - i - 1];
         }
     } else {
         long double h = R / m;
@@ -588,28 +597,6 @@ void Seccional::calcular() {
         vi[i] = 0.5 * (v[i] + v[i + 1]);
     }
 
-    /////////////////////////
-
-    g = 9.8; // m/d² 
-    kBolztmann = 1.380649e-23; // J/K
-    T = 298; //Kelvin
-    din_viscosity = 0.0008921; //N*d/m²
-    sh_rate = 1; // N*s/m2
-    p_0 = 2.25e12; // ug/m³
-    p_w = 1.027e12; // ug/m³
-    Z = 30; //m
-    a_0 = pow(3 * vi[0] / (4 * PI * p_0), 1. / 3); //Simetria esferica para las primeras particulas
-    D = 2.6; //Dimension fractal
-    w = new long double [m];
-    I = new long double [m];
-    for (int i = 0; i < m; i++) {
-        I[i] = 0;
-        w[i] = (g / (6 * PI * (vi[i] / p_0)*(a_0 / vi[0])))*(1. / p_w - 1. / p_0) * pow(vi[i], 1 - 1. / D);
-    }
-    I[0] = 10e5/86400;//ug/m³*d^(-1 Z=3
-    //I[0] = 10e4 / 86400; // Z=30
-
-    ////////////////////////////
 
     //cout << "X------" << endl;
     x = new long double [m + 1];
@@ -669,43 +656,43 @@ void Seccional::calcular() {
     }
 
     ////////////////Coeficientes seccionales
-    B1 = new long double **[m - 1];
-    B2 = new long double *[m - 1];
-    B3 = new long double [m];
-    B3[m - 1] = 0;
-    B4 = new long double *[m - 1];
+    C1 = new long double **[m - 1];
+    C2 = new long double *[m - 1];
+    C3 = new long double [m];
+    C3[m - 1] = 0;
+    C4 = new long double *[m - 1];
     for (int i = 0; i < m - 1; i++) {
-        B3[i] = 0;
-        B2[i] = new long double [m - 1];
-        B4[i] = new long double [m - 1];
-        B1[i] = new long double *[m - 1];
+        C3[i] = 0;
+        C2[i] = new long double [m - 1];
+        C4[i] = new long double [m - 1];
+        C1[i] = new long double *[m - 1];
         for (int j = 0; j < m - 1; j++) {
-            B2[i][j] = 0;
-            B4[i][j] = 0;
-            B1[i][j] = new long double [m - 1];
+            C2[i][j] = 0;
+            C4[i][j] = 0;
+            C1[i][j] = new long double [m - 1];
             for (int k = 0; k < m - 1; k++) {
-                B1[i][j][k] = 0;
+                C1[i][j][k] = 0;
             }
         }
     }
 
 
-    //B1///////////////////////////////////
+    //C1///////////////////////////////////
     long double porcentaje;
     long double porcentaje2 = 0;
-    cout << "B1:----------" << endl;
+    cout << "C1:----------" << endl;
 
     for (int l = 2; l < m + 1; l++) {
         for (int i = 1; i < l; i++) {
             for (int j = 1; j < i + 1; j++) {
                 //
-                B1[i - 1][j - 1][l - 2] = coefB1(i - 1, j - 1, l - 1);
+                C1[i - 1][j - 1][l - 2] = coefC1(i - 1, j - 1, l - 1);
 
                 if (j != i) {
-                    B1[j - 1][i - 1][l - 2] = B1[i - 1][j - 1][l - 2];
+                    C1[j - 1][i - 1][l - 2] = C1[i - 1][j - 1][l - 2];
                 }
-                if (isnan(B1[j - 1][i - 1][l - 2]) == true) {
-                    cout << "Error en B1" << endl;
+                if (isnan(C1[j - 1][i - 1][l - 2]) == true) {
+                    cout << "Error en C1" << endl;
                     std::exit(EXIT_FAILURE);
                 }
             }
@@ -721,16 +708,16 @@ void Seccional::calcular() {
 
 
 
-    ///B2///////////////////////////////////////////
+    ///C2///////////////////////////////////////////
     porcentaje2 = 0;
     cout << "\n";
-    cout << "B2:----------" << endl;
+    cout << "C2:----------" << endl;
 
     for (int i = 1; i < m; i++) {
         for (int l = i + 1; l < m + 1; l++) {
-            B2[i - 1][l - 2] = coefB2(i - 1, l - 1);
-            if (isnan(B2[i - 1][l - 2]) == true) {
-                cout << "Error en B2" << endl;
+            C2[i - 1][l - 2] = coefC2(i - 1, l - 1);
+            if (isnan(C2[i - 1][l - 2]) == true) {
+                cout << "Error en C2" << endl;
                 std::exit(EXIT_FAILURE);
             }
         }
@@ -743,15 +730,15 @@ void Seccional::calcular() {
     }
 
 
-    //B3/////////////////////////////////////////////////////////
+    //C3/////////////////////////////////////////////////////////
     porcentaje2 = 0;
     cout << "\n";
-    cout << "B3:----------" << endl;
+    cout << "C3:----------" << endl;
 
     for (int l = 1; l < m + 1; l++) {
-        B3[l - 1] = coefB3(l - 1);
-        if (isnan(B3[l - 1]) == true) {
-            cout << "Error en B3" << endl;
+        C3[l - 1] = coefC3(l - 1);
+        if (isnan(C3[l - 1]) == true) {
+            cout << "Error en C3" << endl;
             std::exit(EXIT_FAILURE);
         }
         porcentaje = (int) (100 * l / m);
@@ -762,16 +749,16 @@ void Seccional::calcular() {
         }
     }
 
-    //B4/////////////////////////////////////////////
+    //C4/////////////////////////////////////////////
     porcentaje2 = 0;
     cout << "\n";
-    cout << "B4:----------" << endl;
+    cout << "C4:----------" << endl;
 
     for (int i = 2; i < m + 1; i++) {
         for (int l = 1; l < i; l++) {
-            B4[i - 2][l - 1] = coefB4(i - 1, l - 1);
-            if (isnan(B4[i - 2][l - 1]) == true) {
-                cout << "Error en B4" << endl;
+            C4[i - 2][l - 1] = coefC4(i - 1, l - 1);
+            if (isnan(C4[i - 2][l - 1]) == true) {
+                cout << "Error en C4" << endl;
                 std::exit(EXIT_FAILURE);
             }
 
@@ -822,12 +809,12 @@ void Seccional::calcular() {
         incTime = incTiempo;
         value = 0;
         tiempoFino = false;
-        ////////////From volFinitos
+        
         long double vFinal;
         int contadorVFinalNegativo = 0;
         int binarioParidad = 2;
         int numValoresNegativos = 0;
-        while (tiempoFino == false) {
+        while (tiempoFino == false && pasoAdaptativo==true) {
             contadorVFinalNegativo = 0;
             ll = 1;
             double incLL;
