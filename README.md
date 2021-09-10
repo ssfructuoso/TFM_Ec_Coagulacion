@@ -11,5 +11,7 @@ Gelbard F, Tambour Y, Seinfeld JH (1980) Sectional representations for simulatin
 
 ------------------------------
 
-Los métodos numéricos para aproximar soluciones de la ecuación de Smoluchowski están desarrollados en C++. La ejecución de estas simulaciones es registrada en un fichero de texto, en el directorio que se configure en el script. Posteriormente, se procede con el graficado de los resultados obtenidos importando este fichero de texto como una matriz en unos scripts desarrollados en Python. Se ha optado por esta representación gráfica en Python por la mayor comodidad personal en el manejado del fichero y graficado con distintas configuraciones apoyado de paquetes de graficado ampliamente conocidos.
+Los métodos numéricos para aproximar soluciones de la ecuación de Smoluchowski están desarrollados en C++. La ejecución de estas simulaciones es registrada en un fichero de texto, en el directorio que se configure en el script. Posteriormente, se procede con el graficado de los resultados obtenidos importando este fichero de texto como una matriz en unos scripts desarrollados en Python. Se ha optado por esta representación gráfica en Python por tener mayor conocimiento en el manejado del fichero y graficado con distintas configuraciones apoyado de paquetes de graficado ampliamente conocidos.
+
+
 
