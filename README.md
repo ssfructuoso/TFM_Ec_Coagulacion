@@ -1,12 +1,13 @@
 # Métodos numéricos para aproximar la ecuación de coagulación de Smoluchowski
 
-En este repositorio están ubicados los códigos desarrollados para implementar los dos métodos numéricos expuestos en la memoria del Trabajo de Fin de Máster.
-El programado ha sido llevado a cabo por mi, @ssfructuoso. La lógica de estos métodos fue publicada anteriormente por otros autores, la cual utilizo para el programado de los métodos; las fuentes consultadas son:
+En este repositorio están ubicados los códigos desarrollados para implementar los dos métodos numéricos expuestos en la memoria del Trabajo de Fin de Máster "Soluciones numéricas de la ecuación de coagulación de Smoluchowski: comparativa de dos métodos utilizados y una aplicación en Oceanografı́a.". El programado ha sido llevado a cabo por mi, @ssfructuoso. La lógica de estos métodos fue publicada anteriormente por otros autores, la cual utilizo para el programado de los métodos; las fuentes consultadas son:
 
 * El método de volúmenes finitos:
+
 Filbet F, Laurençot P (2004) Numerical simulation of the Smoluchowski coagulation equation. SIAM J Sci Comput 25(6):2004–2028, doi:10.1137/S1064827503429132
 
 * El método seccional:
+
 Gelbard F, Tambour Y, Seinfeld JH (1980) Sectional representations for simulating aerosol dynamics. J Colloid Interface Sci 76(2):541-556. doi:10.1016/0021-9797(80)90394-X
 
 ------------------------------
