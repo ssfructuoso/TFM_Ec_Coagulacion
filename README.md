@@ -20,6 +20,8 @@ A partir de esta version (RK3 y Trapecios) se clonan los scripts en el directori
 Respecto a los scripts de graficado de los resultados, se puede consultar el directorio plot_graficas.
 
 
+[Documentación en construcción]
+
 
 
 
