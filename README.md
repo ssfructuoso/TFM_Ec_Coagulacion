@@ -69,7 +69,7 @@ A continuación se muestra un ejemplo de cómo utilizar los programas. En este c
           * ###
           * En el caso de aplicarse un paso adaptativo, la variable incTiempo establece el máximo del salto temporal \Delta t aplicable en el metodo; 
           * en caso de que el dominio temporal sea fijo incTiempo es directamente \Delta t.
-          * /
+          */
           secRK3.insertarTiempo(0.001, 2, 1e-2);
           secRK3.calcular(); //Se inicia la ejecucion del metodo seccional
           
