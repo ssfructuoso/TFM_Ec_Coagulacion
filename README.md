@@ -78,12 +78,23 @@ A continuación se muestra un ejemplo de cómo utilizar los programas. En este c
       }
       
     ```
+    
+ 4. Ejecutamos el programa. Mientras esté corriendo va a ir mostrando por pantalla el porcentaje completado. Cuando finalice se habrá generado el fichero !!!.
 
-
-
-
-[Documentación en construcción]
-
-
-
-
+ 5. Enlazamos la ruta del fichero (o lo copiamos a una ruta que interese) en cualquiera de los scripts de representación gráfica de la carpeta [plot_graficas](https://github.com/ssfructuoso/TFM_Ec_Coagulacion/tree/main/plot_graficas). 
+    Por ejemplo, si se busca graficar las soluciones obtenidas en las simulaciones se utiliza el script [plot_general.py](https://github.com/ssfructuoso/TFM_Ec_Coagulacion/blob/main/plot_graficas/plot_general.py). Hay que indicar la ruta donde esté localizado el fichero de texto resultante de la simulación
+    ```python
+       datosTxt='Ec_Coagulacion_RK3/EC_Coagulacion_trapeciosCompuesto_RK3/simulaciones/seccional/seccional_nx50_trapeciosCompuesto_KerSUMA.txt'
+    ```
+    y los instantes de tiempo de las soluciones que se quiere mostrar:
+    ```python
+       tiempo1=0.25
+       tiempo2=0.8
+       tiempo3=1
+       tiempo4=1.75
+    ```
+    Es posible configurar más puntos relativos al graficado modificando valores de los métodos usados del paquete Matplotlib.
+    
+    Se obtiene la siguiente gráfica:
+     !!!
+     
