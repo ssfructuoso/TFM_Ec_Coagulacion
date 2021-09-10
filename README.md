@@ -33,6 +33,12 @@ A continuación se muestra un ejemplo de cómo utilizar los programas. En este c
       }
    ```
 
+2. Configurar el núcleo  Ker(x,y) de la ecuación de coagulación. En este caso Ker(x,y)=x+y se indica en la misma clase que antes (Seccional.cpp) en la función   "ker":
+  ```c++
+      long double Seccional::ker(long double x, long double y) {
+         return x+y;
+      }
+   ```
 
 
 
