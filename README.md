@@ -24,7 +24,7 @@ Respecto a los scripts de graficado de los resultados, se puede consultar el dir
 
 A continuación se muestra un ejemplo de cómo utilizar los programas. En este caso se va a utilizar el método de seccional (con cuadratura de trapecios y RK3, es decir, la versión del directorio [EC_Coagulacion_trapeciosCompuesto_RK3](https://github.com/ssfructuoso/TFM_Ec_Coagulacion/tree/main/Ec_Coagulacion_RK3/EC_Coagulacion_trapeciosCompuesto_RK3) utilizando el núcleo suma Ker(x,y)=x+y; para el método de volúmenes finitos el procedimiento es análogo. Los puntos a seguir son los siguientes:
 
-1. Definir la distribución inicial ![condicion_inicial](https://render.githubusercontent.com/render/math?math=n(x_{0},t_{0}).
+1. Definir la distribución inicial ![condicion_inicial](https://render.githubusercontent.com/render/math?math=n(x_{0},t_{0})).
    En el caso del núcleo suma es conocida la existencia de solución. Por tanto, se opta por definir esta condición inicial en un instante t_{0} para así poder obtener    una comparativa de los errores de aproximación del método numérico bajo este núcleo. La distribución inicial de partículas n(x_{0},t_{0}) se define dentro de la    clase [Seccional.cpp](https://github.com/ssfructuoso/TFM_Ec_Coagulacion/blob/main/Ec_Coagulacion_RK3/EC_Coagulacion_trapeciosCompuesto_RK3/Seccional.cpp),          mediante la función "densidadN0()"; definimos esta función así:
    ```c++
       long double Seccional::densidadN0(long double v, long double t) {
