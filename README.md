@@ -16,9 +16,25 @@ Los métodos numéricos para aproximar soluciones de la ecuación de Smoluchowsk
 
 En este repositorio los directorios EC_Coagulacion_RK* contienen los métodos seccional y de volúmenes finitos en función del método de Runge-Kutta que se ha utilizado en ellos. Estos directorios a su vez se subdividen en función del tipo de fórmula de cuadratura utilizada para aproximar los valores de las distintas integrales definidas en los métodos. Se prueba con dos tipos de métodos de Runge-Kutta (el método de Heunn de orden 3 y Runge-Kutta clásico de orden 4) y con tres tipos de fórmulas de cuadratura (Regla del Punto Medio, Simpson y Trapecios). En la memoria del trabajo se concluye que para los dos núcleos testeados se obtienen mejores resultados utilizando el método de Runge-Kutta de orden 3 y la formula de cuadratura de trapecios. 
 
-A partir de esta version (RK3 y Trapecios) se clonan los scripts en el directorio "Ec_Coagulacion_Oceanografia" para adaptarlo al caso de Oceanografía expuesto en el el capítulo tres de la memoria del TFM.
+A partir de esta version (RK3 y Trapecios) se clonan los scripts en el directorio [Ec_Coagulacion_Oceanografia](https://github.com/ssfructuoso/TFM_Ec_Coagulacion/tree/main/Ec_Coagulacion_Oceanografia) para adaptarlo al caso de Oceanografía expuesto en el el capítulo tres de la memoria del TFM.
 
-Respecto a los scripts de graficado de los resultados, se puede consultar el directorio plot_graficas.
+Respecto a los scripts de graficado de los resultados, se puede consultar el directorio [plot_graficas](https://github.com/ssfructuoso/TFM_Ec_Coagulacion/tree/main/plot_graficas).
+
+
+
+A continuación se muestra un ejemplo de cómo utilizar los programas. En este caso se va a utilizar el método de seccional (con cuadratura de trapecios y RK3, es decir, la versión del directorio [EC_Coagulacion_trapeciosCompuesto_RK3](https://github.com/ssfructuoso/TFM_Ec_Coagulacion/tree/main/Ec_Coagulacion_RK3/EC_Coagulacion_trapeciosCompuesto_RK3) utilizando el núcleo suma Ker(x,y)=x+y; para el método de volúmenes finitos el procedimiento es análogo. Los puntos a seguir son los siguientes:
+
+1. Definir la distribución inicial n(x_{0},t_{0}).
+   En el caso del núcleo suma es conocida la existencia de solución. Por tanto, se opta por definir esta condión inicial en un instante t_{0} para así poder obtener    una comparativa de los errores de aproximación del método numérico bajo este núcleo. La distribución inicial de partículas n(x_{0},t_{0}) se define dentro de la    clase [Seccional.cpp](https://github.com/ssfructuoso/TFM_Ec_Coagulacion/blob/main/Ec_Coagulacion_RK3/EC_Coagulacion_trapeciosCompuesto_RK3/Seccional.cpp),          mediante la función "densidadN0()"; definimos esta función así:
+   ```c++
+      long double Seccional::densidadN0(long double v, long double t) {
+          long double n = pow(2 * PI, -0.5) * exp(-t) * pow(v, -1.5) * exp(-v * 0.5 * exp(-2 * t));
+          return n;
+      }
+   ```
+
+
+
 
 
 [Documentación en construcción]
