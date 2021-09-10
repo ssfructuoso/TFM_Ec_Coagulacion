@@ -34,11 +34,49 @@ A continuación se muestra un ejemplo de cómo utilizar los programas. En este c
    ```
 
 2. Configurar el núcleo  Ker(x,y) de la ecuación de coagulación. En este caso Ker(x,y)=x+y se indica en la misma clase que antes (Seccional.cpp) en la función   "ker":
-  ```c++
+    ```c++
       long double Seccional::ker(long double x, long double y) {
          return x+y;
       }
-   ```
+    ```
+    
+3. Definir el resto de valores en la clase [main()](https://github.com/ssfructuoso/TFM_Ec_Coagulacion/blob/main/Ec_Coagulacion_RK3/EC_Coagulacion_trapeciosCompuesto_RK3/main.cpp) a tener en cuenta para ejecutar la simulación. Por ejemplo, pueden ser los siguientes:
+    ```c++
+      ...
+      int main(int argc, char** argv) {
+
+          //Metodo seccional
+          cout<< "Seccional: (Trapecios y RK3)" << endl;
+          //Constructor de la clase "Seccional", donde se especifica la ruta donde se genera el fichero de texto resultante de la simulacion
+          Seccional secRK3 = Seccional("./simulaciones/seccional/seccional_nx100_trapeciosCompuesto_KerSUMA");
+          
+          /*####
+          * insertarGrid(double v0, double R, int m, int numParticionesIntegrales, bool dominioEquiespaciado, bool pasoAdaptativo)
+          * ####
+          *
+          * 1. v0: extremo inferior del dominio espacial.
+          * 2. R: amplitud del dominio espacial. Por tanto el extremo derecho v_{final}=v0+R.
+          * 3. numParticionesIntegrales: numero de particiones por unidad sobre el intervalo en la variable v definido en cada una de las secciones. 
+          *  El particionado en las integrales es equiespaciado y variable.
+          * 4. dominioEquiespaciado: determina si el dominio de la variable espacial es equiespaciado o logaritmico. Si dominioEquiespaciado=false entonces
+          * el dominio es logaritmico.
+          * 5. pasoAdaptativo: determina si se aplica un paso adaptativo en la aproximacion temporal o no; en este caso si se ha aplicado.
+          */
+          secRK3.insertarGrid(1e-4,500,100,400,false,true);
+            
+          /*###
+          * insertarTiempo(double t0, double tFinal, double incTiempo)
+          * ###
+          * En el caso de aplicarse un paso adaptativo, la variable incTiempo establece el máximo del salto temporal \Delta t aplicable en el metodo; 
+          * en caso de que el dominio temporal sea fijo incTiempo es directamente \Delta t.
+          * /
+          secRK3.insertarTiempo(0.001, 2, 1e-2);
+          secRK3.calcular(); //Se inicia la ejecucion del metodo seccional
+          
+          return 0;
+      }
+      
+    ```
 
 
 
