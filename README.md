@@ -1,4 +1,4 @@
-# Métodos numéricos para aproximar la ecuación de coagulación de Smoluchowski
+# Métodos numéricos para aproximar soluciones de la ecuación de coagulación de Smoluchowski
 
 En este repositorio están ubicados los códigos desarrollados para implementar los dos métodos numéricos expuestos en la memoria del Trabajo de Fin de Máster "Soluciones numéricas de la ecuación de coagulación de Smoluchowski: comparativa de dos métodos utilizados y una aplicación en Oceanografı́a.". El programado ha sido elaborado por mi, @ssfructuoso. La lógica de estos métodos fue publicada anteriormente por otros autores, la cual utilizo para el programado de los métodos; las fuentes consultadas son:
 
