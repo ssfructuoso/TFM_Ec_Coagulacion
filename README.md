@@ -97,5 +97,5 @@ A continuación se muestra un ejemplo de cómo utilizar los programas. En este c
     
     Se obtiene la siguiente gráfica:
     
-    [Seccional_Kernel_Suma](https://github.com/ssfructuoso/TFM_Ec_Coagulacion/blob/main/plot_graficas/screenshots/Ejemplo_grafica_ker_suma_seccional.png)
+    ![Seccional_Kernel_Suma](https://github.com/ssfructuoso/TFM_Ec_Coagulacion/blob/main/plot_graficas/screenshots/Ejemplo_grafica_ker_suma_seccional.png)
      
